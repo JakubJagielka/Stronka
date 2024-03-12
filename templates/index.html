@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Include jQuery for simplicity -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="top-bar">
+  <input type="text" id="postContent" placeholder="Write something...">
+  <button onclick="addPost()">Post</button>
+</div>
+
+<div class="posts" id="posts">
+    <!-- Posts will be dynamically added here -->
+</div>
+
+<script>
+$(document).ready(function(){
+    getPosts(); // Load posts initially
+});
+
+function getPosts() {
+    $.getJSON('/get_posts', function(data) {
+        $('#posts').empty(); // Clear the posts div
+        $.each(data, function(key, post){
+            $('#posts').append('<div class="post"><p>' + post.content + '</p></div>');
+        });
+    });
+}
+
+function addPost() {
+    var content = $('#postContent').val();
+    $.post('/add_post', {content: content}, function(data){
+        $('#posts').append('<div class="post"><p>' + data.content + '</p></div>'); // Add the new post
+        $('#postContent').val(''); // Clear input box
+    });
+}
+</script>
+
+</body>
+</html>
