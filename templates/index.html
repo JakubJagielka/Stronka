@@ -2,42 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- Include jQuery for simplicity -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Post Board</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 8px;
+  }
+  .top-bar {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .top-bar input[type=text] {
+    padding: 8px;
+  }
+  .top-bar .search-input {
+    flex-grow: 1;
+  }
+  .posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+  }
+  .post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 0;
+  }
+</style>
 </head>
 <body>
 
 <div class="top-bar">
-  <input type="text" id="postContent" placeholder="Write something...">
-  <button onclick="addPost()">Post</button>
+  <form action="/submit" method="post">
+        <label for="value">Enter Value:</label><br>
+        <input type="text" id="value" name="value"><br><br>
+        <input type="submit" value="Submit">
+  </form>
 </div>
 
-<div class="posts" id="posts">
-    <!-- Posts will be dynamically added here -->
+<div class="posts">
+  {% for post in posts %}
+    <div class="post">
+      <p>{{ post.content }}</p>
+    </div>
+  {% endfor %}
 </div>
-
-<script>
-$(document).ready(function(){
-    getPosts(); // Load posts initially
-});
-
-function getPosts() {
-    $.getJSON('/get_posts', function(data) {
-        $('#posts').empty(); // Clear the posts div
-        $.each(data, function(key, post){
-            $('#posts').append('<div class="post"><p>' + post.content + '</p></div>');
-        });
-    });
-}
-
-function addPost() {
-    var content = $('#postContent').val();
-    $.post('/add_post', {content: content}, function(data){
-        $('#posts').append('<div class="post"><p>' + data.content + '</p></div>'); // Add the new post
-        $('#postContent').val(''); // Clear input box
-    });
-}
-</script>
 
 </body>
 </html>
