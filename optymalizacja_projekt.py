@@ -20,7 +20,7 @@ class Viewer:
         posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
         photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
         nPosts, nPhotos = posts[:amount], photos[:amount]
-        bundle = {index+1: (nPosts[index], nPhotos[index]) for index in range(len(nPosts))}
+        bundle = [{'postData': nPosts[index], 'photoData': nPhotos[index]} for index in range(len(nPosts))]
         return bundle
     
 
