@@ -20,13 +20,13 @@ class Viewer:
         posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
         photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
         nPosts, nPhotos = posts[:amount], photos[:amount]
-        bundle = [{'postData': nPosts[index], 'photoData': nPhotos[index]} for index in range(len(nPosts))]
+        bundle = [{**nPosts[index], 'url': nPhotos[index]['url']} for index in range(len(nPosts))]
         return bundle
     
 
 def main():
     x = Viewer.getPosts(4)
-    print(x)
+    print(x[0])
 
 if __name__ == '__main__':
     main()
