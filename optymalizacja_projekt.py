@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 
 '''
@@ -16,15 +16,17 @@ print(response.json())'''
 
 class Viewer:
     @staticmethod
-    def getPosts(amount: int) -> list:
-        posts = list(requests.get('https://jsonplaceholder.typicode.com/posts'))
-        print(len(posts[:2]))
-        return posts[:amount]
-
-
+    def getPosts(amount: int) -> dict:
+        posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
+        photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
+        nPosts, nPhotos = posts[:amount], photos[:amount]
+        bundle = {index+1: (nPosts[index], nPhotos[index]) for index in range(len(nPosts))}
+        return bundle
+    
 
 def main():
-    print(Viewer.getPosts(13))
+    x = Viewer.getPosts(4)
+    print(x)
 
 if __name__ == '__main__':
     main()
