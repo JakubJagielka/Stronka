@@ -12,14 +12,22 @@ posts = [
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    if request.method == 'POST':
+    if request.method == 'POST' and 'value' in request.form:
         value = request.form['value']  # retrieving value from form
         length = len(value)
         print(value)
         posts = Viewer.getPosts(int(value))
         print(posts)
 
-    return render_template('index.html', posts=posts)
+        return render_template('index.html', posts=posts)
+    if request.method == 'POST' and 'search' in request.form:
+        value = request.form['value']  # retrieving value from form
+        length = len(value)
+        print(value)
+        posts = Viewer.getPosts(int(value))
+        print(posts)
+
+        return render_template('index.html', posts=posts)
 
 
 
