@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
-
+from optymalizacja_projekt import Viewer
 app = Flask(__name__)
 
 # Simulate a posts database with a list
 posts = [
-    {"id": 1, "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
-    {"id": 2, "content": "Pellentesque vitae velit ex."},
-    {"id": 3, "content": "Mauris dapibus risus quis suscipit vulputate."},
-    {"id": 4, "content": "Mauris dadadadpibus risus quis suscipit vulputate."}
+    {"id": 1, "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.","url":"https://preview.redd.it/a-rare-hybrid-of-nord-and-imga-v0-o4ovn3il8nba1.png?width=640&crop=smart&auto=webp&s=ddc3c8006041bf1f290b21a679670cf0dfa862fb"},
+    {"id": 2, "content": "Pellentesque vitae velit ex.","url":"https://preview.redd.it/a-rare-hybrid-of-nord-and-imga-v0-o4ovn3il8nba1.png?width=640&crop=smart&auto=webp&s=ddc3c8006041bf1f290b21a679670cf0dfa862fb"},
+    {"id": 3, "content": "Mauris dapibus risus quis suscipit vulputate.","url":"https://preview.redd.it/a-rare-hybrid-of-nord-and-imga-v0-o4ovn3il8nba1.png?width=640&crop=smart&auto=webp&s=ddc3c8006041bf1f290b21a679670cf0dfa862fb"},
+    {"id": 4, "content": "Mauris dadadadpibus risus quis suscipit vulputate.","url":"https://preview.redd.it/a-rare-hybrid-of-nord-and-imga-v0-o4ovn3il8nba1.png?width=640&crop=smart&auto=webp&s=ddc3c8006041bf1f290b21a679670cf0dfa862fb"}
 ]
 
 @app.route('/submit', methods=['POST'])
@@ -15,6 +15,10 @@ def submit():
     if request.method == 'POST':
         value = request.form['value']  # retrieving value from form
         length = len(value)
+        print(value)
+        posts = Viewer.getPosts(int(value))
+        print(posts)
+
     return render_template('index.html', posts=posts)
 
 
