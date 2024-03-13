@@ -1,4 +1,4 @@
-import requests, json
+import requests
 
 
 '''
@@ -14,18 +14,37 @@ CONTENT
 print(response.json())'''
 # ile postow -> n postow i n zdjec
 
-class Viewer:
+class PostUtils:
+    INCORRECT_VALUE = ({'id':1, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'},
+                       {'id':2, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'},
+                       {'id':3, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'})
+    class PostList:
+        def __init__(self, posts: list[dict[str, any]]) -> None:
+            self.posts = posts
+        
+        '''{'userId': 1,
+            'id': 1,
+            'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+            'body': 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
+            'url': 'https://via.placeholder.com/600/92c952'}'''
+        def filterPosts(self, amount: int,  filter: list[int]) -> list[dict[str, any]]:
+            self.filteredPosts = []
+            for i in self.posts:
+                if len(i['title']) in range(filter[0], filter[1]):
+                    self.filteredPosts.append(i)
+            self.filteredPosts = self.filteredPosts[:amount]
+            return self.filteredPosts
+
     @staticmethod
-    def getPosts(amount: int) -> dict:
+    def getPosts() -> PostList:
         posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
         photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
-        nPosts, nPhotos = posts[:amount], photos[:amount]
-        bundle = [{**nPosts[index], 'url': nPhotos[index]['url']} for index in range(len(nPosts))]
+        bundle = PostUtils.PostList([{**posts[index], 'url': photos[index]['url']} for index in range(len(posts))])
         return bundle
     
 
 def main():
-    x = Viewer.getPosts(4)
+    x = PostUtils.getPosts(4)
     print(x[0])
 
 if __name__ == '__main__':

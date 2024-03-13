@@ -7,8 +7,8 @@
 <style>
 
     img{
-        width: 50px;
-        height: 50px;
+        width: 150px;
+        height: 150px;
     }
   .post{
     display: flex;
@@ -50,11 +50,11 @@
 
 <div class="top-bar">
   <form action="/submit" method="post">
-        <label for="value">Enter Value:</label><br>
-        <input type="text" id="value" name="value"><br><br>
-        <input type="submit" value="Submit">
-        <label for="value">Enter Value:</label><br>
-        <input type="text" id="search" name="value"><br><br>
+        <label for="value">Amount of posts:</label><br>
+        <input type="text" id="value" name="value"><br>
+        <label for="value">Lower and upper post length limit:</label><br>
+        <input type="text" id="Lower_Limit" name="Lower_Limit">
+        <input type="text" id="Upper_Limit" name="Upper_Limit"><br>
         <input type="submit" value="Submit">
   </form>
 </div>
@@ -62,8 +62,8 @@
 <div class="posts">
   {% for post in posts %}
     <div class="post">
-      <p>{{ post.body }}</p>
-        <img src="{{ post.url }}" alt="Post Image">
+      <img src="{{ post.url }}" alt="Post Image">
+      <p>{{ post.title }}</p>
     </div>
   {% endfor %}
 </div>
