@@ -15,9 +15,6 @@ print(response.json())'''
 # ile postow -> n postow i n zdjec
 
 class PostUtils:
-    INCORRECT_VALUE = ({'id':1, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'},
-                       {'id':2, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'},
-                       {'id':3, 'title':'Incorrect value was inputed, make sure you typed a number', 'url':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/1024px-Red_X.svg.png'})
     class PostList:
         def __init__(self, posts: list[dict[str, any]]) -> None:
             self.posts = posts
