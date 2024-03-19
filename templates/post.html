@@ -46,16 +46,13 @@
     <img src="{{post.url}}" alt="Post Image">
     </div>
     <div class="comments">
-    <h3>Comments</h3>
+    <h3>Comments(n)</h3>
+    {% for comment in comments %}
     <div class="comment">
-        <p>Comment 1</p>
-    </div>
-    <div class="comment">
-        <p>Comment 2</p>
-    </div>
-    <div class="comment">
-        <p>Comment 3</p>
-    </div>
+    <h3>{{comment.name}}</h3>
+    <p>{{ comment.body }}</p>
+    </div></a>
+    {% endfor %}
     </div>
 </body>
 </html>

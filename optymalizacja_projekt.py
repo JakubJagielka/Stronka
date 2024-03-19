@@ -22,6 +22,19 @@ class PostUtils:
         bundle = PostUtils.PostList([{**posts[index], 'url': photos[index]['url']} for index in range(len(posts))])
         return bundle
     
+class CommentUtils:
+    def getComments(postId: int) -> list[dict[str, any]]:
+        comments = requests.get('https://jsonplaceholder.typicode.com/comments').json()
+        i, maxI, isIdFound = 0, len(comments), False # todo optymaln petla
+        validComments = []
+        while i < maxI:
+            # print(type(comments[i]['postId']),type( postId), comments[i]['postId'] == postId)
+            if comments[i]['postId'] == postId:
+                # print(1)
+                validComments.append(comments[i])
+            i += 1
+        print(validComments)
+        return validComments
 
 def main():
     x = PostUtils.getPosts()

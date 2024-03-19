@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from optymalizacja_projekt import PostUtils
+from optymalizacja_projekt import PostUtils, CommentUtils
 app = Flask(__name__)
 
 
@@ -28,6 +28,7 @@ def submit():
         if upperLimit <= lowerLimit:
             upperLimit = lowerLimit +1
 
+        global posts
         posts = PostUtils.getPosts().filterPosts(amountOfPosts, [lowerLimit, upperLimit])
 
         return render_template('index.html', posts=posts)
@@ -42,9 +43,12 @@ def post():
     # Retrieve post ID from URL query parameters
     post_id = request.args.get('id')
     # Find the post with the given ID
+    print(posts)
     post = next((p for p in posts if str(p['id']) == post_id), None)
+    comments = CommentUtils.getComments(int(post_id))
+    print(comments)
     if post:
-        return render_template('post.html', post=post)
+        return render_template('post.html', post=post, comments=comments)
     else:
         return "Post not found", 404
 
