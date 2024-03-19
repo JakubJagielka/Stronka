@@ -35,11 +35,7 @@ def submit():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        content = request.form['content']
-        new_id = len(posts) + 1
-        posts.append({"id": new_id, "content": content})
-        return redirect(url_for('index'))
+
     return render_template('index.html', posts=posts)
 
 if __name__ == '__main__':
