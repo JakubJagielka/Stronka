@@ -35,8 +35,18 @@ def submit():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     return render_template('index.html', posts=posts)
+
+@app.route('/post.html')
+def post():
+    # Retrieve post ID from URL query parameters
+    post_id = request.args.get('id')
+    # Find the post with the given ID
+    post = next((p for p in posts if str(p['id']) == post_id), None)
+    if post:
+        return render_template('post.html', post=post)
+    else:
+        return "Post not found", 404
 
 if __name__ == '__main__':
     app.run(debug=True)
