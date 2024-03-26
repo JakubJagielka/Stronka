@@ -1,19 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from optymalizacja_projekt import PostUtils, CommentUtils
 app = Flask(__name__)
 
 
-# start page with first 4 posts
+# Początkowe 4 posty na stronie
 posts = PostUtils.getPosts().filterPosts(4, [0, 2147483646])
 
 @app.route('/submit', methods=['POST'])
 def submit():
     if request.method == 'POST':
-        # tu biore wartosc z wejscia liczby postow
+        # tu prubuje wziąść wartosc z wejscia liczby postow
         try:
-            amountOfPosts = int(request.form['value'])  # retrieving value from form
+            amountOfPosts = int(request.form['value'])  # zdobycie wartosci z formularza
         except ValueError:
-            amountOfPosts = 10
+            amountOfPosts = 10 #bazowa wartosc
 
         # tu zbieram wartosci z 2 pol dolnego i gornego limitu dlugosci postu
         try:
@@ -40,10 +40,13 @@ def index():
 
 @app.route('/post.html')
 def post():
-    # Retrieve post ID from URL query parameters
-    post_id = request.args.get('id')
-    # Find the post with the given ID
-    print(posts)
+    # Zdobycie id z adresu url aby wiedzieć, który post wyświetlić
+    try:
+        post_id = request.args.get('id')
+        # Znalezienie postu o danym id
+        print(posts)
+    except:
+        return "Something went wrong", 404
     post = next((p for p in posts if str(p['id']) == post_id), None)
     comments = CommentUtils.getComments(int(post_id))
     print(comments)
