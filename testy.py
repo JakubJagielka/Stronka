@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import patch
-from main import app, PostUtils, CommentUtils
+from unittest.mock import patch, Mock
+from main import app
+from optymalizacja_projekt import PostUtils, CommentUtils
 
 class FlaskAppTests(unittest.TestCase):
 
@@ -36,6 +37,28 @@ class PostUtilsTest(unittest.TestCase):
         posts = PostUtils.getPosts()
         self.assertIsInstance(posts, PostUtils.PostList)
         self.assertEqual(len(posts.posts), 1)
+    
+    @patch('testy.PostUtils.getPosts')
+    def test_filterPosts(self, mock_getPosts):
+        # Przygotowanie zmockowanych danych
+        mock_posts = [
+            {"id": 1, "user_id": 11, 'title': '1'},
+            {"id": 2, "user_id": 12, 'title': '12'},
+            {"id": 3, "user_id": 11, 'title': '123'},
+            {"id": 4, "user_id": 13, 'title': '1234'},
+            {"id": 5, "user_id": 15, 'title': '12345'},
+        ]
+        mock_getPosts.return_value = mock_posts
+
+        # Wywołanie metody filterPosts
+        post_list = PostUtils.PostList(mock_posts)
+        filtered_posts = post_list.filterPosts(5, [2, 5])
+
+        # Sprawdzenie czy zwrócono oczekiwane wyniki
+        self.assertEqual(len(filtered_posts), 3)
+        self.assertEqual(filtered_posts[0]["user_id"], 12)
+        self.assertEqual(filtered_posts[1]["user_id"], 11)
+        self.assertEqual(filtered_posts[2]["user_id"], 13)
 
 
 class CommentUtilsTest(unittest.TestCase):

@@ -25,11 +25,13 @@ class PostUtils:
 class CommentUtils:
     def getComments(postId: int) -> list[dict[str, any]]:
         comments = requests.get('https://jsonplaceholder.typicode.com/comments').json()
-        i, maxI, isIdFound = 0, len(comments), False # todo optymaln petla
+        i, maxI = 0, len(comments)
         validComments = []
         while i < maxI:
-            # print(type(comments[i]['postId']),type( postId), comments[i]['postId'] == postId)
-            if comments[i]['postId'] == postId:
+            print(i)
+            if comments[i]['postId'] > postId:
+                break
+            elif comments[i]['postId'] == postId:
                 # print(1)
                 validComments.append(comments[i])
             i += 1
