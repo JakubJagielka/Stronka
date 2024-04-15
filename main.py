@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 
 # Początkowe 4 posty na stronie
-posts = PostUtils.getPosts().filterPosts(4, [0, 2147483646])
+posts = PostUtils.getPosts().filterPosts(100, [0, 2147483646])
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -13,7 +13,7 @@ def submit():
         try:
             amountOfPosts = int(request.form['value'])  # zdobycie wartosci z formularza
         except ValueError:
-            amountOfPosts = 10 #bazowa wartosc
+            amountOfPosts = 100 #bazowa wartosc
 
         # tu zbieram wartosci z 2 pol dolnego i gornego limitu dlugosci postu
         try:
