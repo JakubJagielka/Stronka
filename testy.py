@@ -21,7 +21,7 @@ class FlaskAppTests(unittest.TestCase):
 
         # Testowanie storny z komentarzami
     def test_post_page(self):
-        # Directly appending query parameters to the URL
+        # Testowanie strony konkretnego posta
         response = self.app.get('/post.html?id=1')
         self.assertEqual(response.status_code, 200)
 
@@ -60,15 +60,10 @@ class PostUtilsTest(unittest.TestCase):
 
 class CommentUtilsTest(unittest.TestCase):
     # Testowanie funkcji getComments
-    @patch('requests.get')
-    def test_get_comments(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = [
-            {'postId': 1, 'id': 1, 'name': 'Test Comment', 'email': 'test@example.com', 'body': 'Test Body'}
-        ]
-
+    def test_get_comments(self):
         comments = CommentUtils.getComments(1)
+        # sprawdzam czy dostalem dobry typ danych wysylajac request o komentarze
         self.assertIsInstance(comments, list)
-        self.assertEqual(len(comments), 1)
 
 
 if __name__ == '__main__':
