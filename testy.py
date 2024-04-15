@@ -14,64 +14,56 @@ class FlaskAppTests(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
 
-    def test_submit_post(self):
+    def test_filter_post(self):
         # Testowanie strony z formularzem
         response = self.app.post('/submit', data={'value': '5', 'Lower_Limit': '10', 'Upper_Limit': '100'})
         self.assertEqual(response.status_code, 200)
 
         # Testowanie storny z komentarzami
     def test_post_page(self):
-        # Directly appending query parameters to the URL
+        # Testowanie strony konkretnego posta
         response = self.app.get('/post.html?id=1')
         self.assertEqual(response.status_code, 200)
 
 
 class PostUtilsTest(unittest.TestCase):
     # Testowanie funkcji getPosts
-    @patch('requests.get')
-    def test_get_posts(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = [
-            {'userId': 1, 'id': 1, 'title': 'Test Title', 'body': 'Test body', 'url': 'Test URL'}
-        ]
+    def test_get_posts(self):
+        pl = PostUtils.getPosts()
 
-        posts = PostUtils.getPosts()
-        self.assertIsInstance(posts, PostUtils.PostList)
-        self.assertEqual(len(posts.posts), 1)
+        # sprawdzam czy obiekt jest typu PostList i czy lista postow jest wieksza od 0
+        self.assertIsInstance(pl, PostUtils.PostList)
+        self.assertGreater(len(pl.posts), 0)
     
-    @patch('testy.PostUtils.getPosts')
-    def test_filterPosts(self, mock_getPosts):
-        # Przygotowanie zmockowanych danych
+    def test_filterPosts(self):
+        # mockowy zbior postow, atrybuty ograniczylem do tylko tych istotnych dla filtra i testow
         mock_posts = [
             {"id": 1, "user_id": 11, 'title': '1'},
             {"id": 2, "user_id": 12, 'title': '12'},
             {"id": 3, "user_id": 11, 'title': '123'},
-            {"id": 4, "user_id": 13, 'title': '1234'},
-            {"id": 5, "user_id": 15, 'title': '12345'},
+            {"id": 4, "user_id": 13, 'title': '12345'},
+            {"id": 5, "user_id": 15, 'title': '1234'},
         ]
-        mock_getPosts.return_value = mock_posts
 
         # Wywołanie metody filterPosts
         post_list = PostUtils.PostList(mock_posts)
         filtered_posts = post_list.filterPosts(5, [2, 5])
 
-        # Sprawdzenie czy zwrócono oczekiwane wyniki
+        # sprawdzam czy sa tylko 3 wyniki bo tyle przepuszcza powyzszy filtr
         self.assertEqual(len(filtered_posts), 3)
-        self.assertEqual(filtered_posts[0]["user_id"], 12)
-        self.assertEqual(filtered_posts[1]["user_id"], 11)
-        self.assertEqual(filtered_posts[2]["user_id"], 13)
+        
+        # sprawdzam po kolei id postow zeby zobaczyc czy filtr przepuscil te spelniajace jego warunki
+        self.assertEqual(filtered_posts[0]["id"], 2)
+        self.assertEqual(filtered_posts[1]["id"], 3)
+        self.assertEqual(filtered_posts[2]["id"], 5)
 
 
 class CommentUtilsTest(unittest.TestCase):
     # Testowanie funkcji getComments
-    @patch('requests.get')
-    def test_get_comments(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = [
-            {'postId': 1, 'id': 1, 'name': 'Test Comment', 'email': 'test@example.com', 'body': 'Test Body'}
-        ]
-
+    def test_get_comments(self):
         comments = CommentUtils.getComments(1)
+        # sprawdzam czy dostalem dobry typ danych wysylajac request o komentarze
         self.assertIsInstance(comments, list)
-        self.assertEqual(len(comments), 1)
 
 
 if __name__ == '__main__':

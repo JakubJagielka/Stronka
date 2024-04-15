@@ -44,12 +44,10 @@ def post():
     try:
         post_id = request.args.get('id')
         # Znalezienie postu o danym id
-        print(posts)
     except:
         return "Something went wrong", 404
     post = next((p for p in posts if str(p['id']) == post_id), None)
     comments = CommentUtils.getComments(int(post_id))
-    print(comments)
     if post:
         return render_template('post.html', post=post, comments=comments)
     else:

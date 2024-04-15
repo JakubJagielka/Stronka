@@ -28,19 +28,9 @@ class CommentUtils:
         i, maxI = 0, len(comments)
         validComments = []
         while i < maxI:
-            print(i)
             if comments[i]['postId'] > postId:
                 break
             elif comments[i]['postId'] == postId:
-                # print(1)
                 validComments.append(comments[i])
             i += 1
-        print(validComments)
         return validComments
-
-def main():
-    x = PostUtils.getPosts()
-    print(x.posts[0])
-
-if __name__ == '__main__':
-    main()
