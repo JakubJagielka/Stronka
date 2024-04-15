@@ -14,7 +14,7 @@ class FlaskAppTests(unittest.TestCase):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
 
-    def test_submit_post(self):
+    def test_filter_post(self):
         # Testowanie strony z formularzem
         response = self.app.post('/submit', data={'value': '5', 'Lower_Limit': '10', 'Upper_Limit': '100'})
         self.assertEqual(response.status_code, 200)
