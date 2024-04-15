@@ -28,15 +28,12 @@ class FlaskAppTests(unittest.TestCase):
 
 class PostUtilsTest(unittest.TestCase):
     # Testowanie funkcji getPosts
-    @patch('requests.get')
-    def test_get_posts(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = [
-            {'userId': 1, 'id': 1, 'title': 'Test Title', 'body': 'Test body', 'url': 'Test URL'}
-        ]
+    def test_get_posts(self):
+        pl = PostUtils.getPosts()
 
-        posts = PostUtils.getPosts()
-        self.assertIsInstance(posts, PostUtils.PostList)
-        self.assertEqual(len(posts.posts), 1)
+        # sprawdzam czy obiekt jest typu PostList i czy lista postow jest wieksza od 0
+        self.assertIsInstance(pl, PostUtils.PostList)
+        self.assertGreater(len(pl.posts), 0)
     
     def test_filterPosts(self):
         # mockowy zbior postow, atrybuty ograniczylem do tylko tych istotnych dla filtra i testow
