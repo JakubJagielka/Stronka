@@ -34,3 +34,17 @@ class CommentUtils:
                 validComments.append(comments[i])
             i += 1
         return validComments
+
+class ErrorUtils:
+    @staticmethod
+    def translateErrorToString(errorCode: int) -> str:
+        if errorCode == 0:
+            return ''
+        errorMsg = 'Incorrect values in: '
+        if errorCode & 4:
+            errorMsg += 'Amount of posts, '
+        if errorCode & 2:
+            errorMsg += 'Lower post length limit, '
+        if errorCode & 1:
+            errorMsg += 'Upper limit'
+        return errorMsg

@@ -17,7 +17,7 @@
       margin-bottom: 10px;
     }
   body {
-    font-family: Arial, sans-serif;
+    font-family:sans-serif;
     background-color: #bbf;
     margin: 0;
     padding: 8px;
@@ -40,7 +40,6 @@
     align-items: center;
     background-color: #ddf;
     border: 1px solid #ddd;
-    padding: 10px;
   }
   .post:hover{
     border-width: 2px;
@@ -61,11 +60,15 @@
     .search-input{
         text-align: center;
         font-size: 30px;
-        font-style: italic;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
+    .error{
+      color: red;
+      padding: 10px;
+    }
+
 </style>
 </head>
 <body>
@@ -80,8 +83,11 @@
         <input type="text" id="Lower_Limit" name="Lower_Limit">
         <label for="value">Upper limit:</label>
         <input type="text" id="Upper_Limit" name="Upper_Limit">
-        <input type="submit" value="Submit">
+        <input type="submit" value="Filter">
         </div>
+        <div class="error">
+        <label><u>{{errorCode}}</u></label>
+      </div>
 
   </form>
 </div>
