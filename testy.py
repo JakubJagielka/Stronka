@@ -87,8 +87,7 @@ class Test_PerformanceTest(unittest.TestCase):
     Testowanie wydajnosci aplikacji
     """
 
-
-    wait_time = between(1, 5)
+    wait_time = between(1,5)
 
     def setUp(self):
         self.client = app
@@ -108,9 +107,11 @@ class Test_PerformanceTest(unittest.TestCase):
 
     @task(2)
     def test_submit_page(self):
-        self.client.post('/submit', data={'value': '5', 'Lower_Limit': '10', 'Upper_Limit': '100'})
+        data = {'value': '5', 'Lower_Limit': '10', 'Upper_Limit': '100'}
+        self.client.post('/submit', json=data)
         self.client.get('/')
-        self.client.post('/submit', data={'value': '200', 'Lower_Limit': '1', 'Upper_Limit': '100'})
+        data = {'value': '200', 'Lower_Limit': '1', 'Upper_Limit': '100'}
+        self.client.post('/submit', json=data)
         self.client.get('/')
 
 
