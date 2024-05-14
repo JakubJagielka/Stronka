@@ -1,5 +1,5 @@
 import requests
-
+import time
 
 class PostUtils:
     class PostList:
@@ -17,14 +17,18 @@ class PostUtils:
 
     @staticmethod
     def getPosts() -> PostList:
+        start = time.time()
         posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
         photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
+        print(f'Posts fetched in {time.time() - start} seconds')
         bundle = PostUtils.PostList([{**posts[index], 'url': photos[index]['url']} for index in range(len(posts))])
         return bundle
     
 class CommentUtils:
     def getComments(postId: int) -> list[dict[str, any]]:
+        start = time.time()
         comments = requests.get('https://jsonplaceholder.typicode.com/comments').json()
+        print(f'Comments fetched in {time.time() - start} seconds')
         i, maxI = 0, len(comments)
         validComments = []
         while i < maxI:
