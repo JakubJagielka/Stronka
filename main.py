@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request
 from optymalizacja_projekt import PostUtils, CommentUtils, ErrorUtils
-app = Flask(__name__)
+import cProfile
 
+app = Flask(__name__)
 
 # Początkowe 4 posty na stronie
 posts = PostUtils.getPosts().filterPosts(100, [0, 2147483646])
+
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -17,9 +19,8 @@ def submit():
         try:
             amountOfPosts = int(amountOfPosts)  # zdobycie wartosci z formularza
         except ValueError:
-            amountOfPosts = 100 #bazowa wartosc
+            amountOfPosts = 100  # bazowa wartosc
             errorCode |= 4
-
 
         # tu zbieram wartosci z 2 pol dolnego i gornego limitu dlugosci postu
         lowerLimit = request.form['Lower_Limit']
@@ -30,7 +31,7 @@ def submit():
         except:
             lowerLimit = 0
             errorCode |= 2
-        
+
         upperLimit = request.form['Upper_Limit']
         if upperLimit == '':
             upperLimit = 2147483646
@@ -41,17 +42,18 @@ def submit():
             errorCode |= 1
 
         if upperLimit <= lowerLimit:
-            upperLimit = lowerLimit +1
+            upperLimit = lowerLimit + 1
 
         global posts
         posts = PostUtils.getPosts().filterPosts(amountOfPosts, [lowerLimit, upperLimit])
         errorCode = ErrorUtils.translateErrorToString(errorCode)
-        return render_template('index.html', posts=posts, errorCode = errorCode)
+        return render_template('index.html', posts=posts, errorCode=errorCode)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html', posts=posts)
+
 
 @app.route('/post.html')
 def post():
@@ -68,5 +70,6 @@ def post():
     else:
         return "Post not found", 404
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    cProfile.run('app.run(debug=True)', sort='cumulative')
