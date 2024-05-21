@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 from optymalizacja_projekt import PostUtils, CommentUtils, ErrorUtils
 import cProfile
-from memory_profiler import memory_usage
 import asyncio
 
 app = Flask(__name__)
