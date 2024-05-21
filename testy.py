@@ -1,8 +1,10 @@
 import unittest
-from locust import task, between
+from locust import task, between, HttpUser
 from main import app
 from optymalizacja_projekt import PostUtils, CommentUtils
 import requests
+import cProfile
+from memory_profiler import memory_usage
 
 app = app.test_client()
 app.testing = True
@@ -47,7 +49,8 @@ class PostUtilsTest(unittest.TestCase):
         # sprawdzam czy obiekt jest typu PostList i czy lista postow jest wieksza od 0
         self.assertIsInstance(pl, PostUtils.PostList)
         self.assertGreater(len(pl.posts), 0)
-    
+
+
     def test_filterPosts(self):
         # mockowy zbior postow, atrybuty ograniczylem do tylko tych istotnych dla filtra i testow
         # testowanie filtrów, wewnetrzne api
@@ -115,5 +118,5 @@ class Test_PerformanceTest(unittest.TestCase):
         self.client.get('/')
 
 
-if __name__ == '__main__':
-    unittest.main()
+
+
