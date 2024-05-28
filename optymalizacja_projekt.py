@@ -57,11 +57,13 @@ class ErrorUtils:
     def translateErrorToString(errorCode: int) -> str:
         if errorCode == 0:
             return ''
-        errorMsg = 'Incorrect values in: '
+        errorMsg = 'Error: '
         if errorCode & 4:
-            errorMsg += 'Amount of posts, '
+            errorMsg += 'Incorrect amount of posts, '
         if errorCode & 2:
-            errorMsg += 'Lower post length limit, '
+            errorMsg += 'Incorrect lower post length limit, '
         if errorCode & 1:
-            errorMsg += 'Upper limit'
+            errorMsg += 'Incorrect upper limit, '
+        if errorCode & 8:
+            errorMsg += 'No posts found that match the criteria'
         return errorMsg
