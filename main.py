@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 from optymalizacja_projekt import PostUtils, CommentUtils, ErrorUtils
 import cProfile
-from memory_profiler import memory_usage
 import asyncio
 
 app = Flask(__name__)
@@ -48,6 +47,8 @@ async def submit():
         global posts
         posts = await PostUtils.getPosts()
         posts = posts.filterPosts(amountOfPosts, [lowerLimit, upperLimit])
+        if len(posts) == 0:
+            errorCode |= 8
         errorCode = ErrorUtils.translateErrorToString(errorCode)
         return render_template('index.html', posts=posts, errorCode=errorCode)
 
