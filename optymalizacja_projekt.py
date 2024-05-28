@@ -1,3 +1,5 @@
+import asyncio
+import httpx
 import requests
 import time
 
@@ -16,27 +18,38 @@ class PostUtils:
             return self.filteredPosts
 
     @staticmethod
-    def getPosts() -> PostList:
-        start = time.time()
-        posts = requests.get('https://jsonplaceholder.typicode.com/posts').json()
-        photos = requests.get('https://jsonplaceholder.typicode.com/photos').json()
-        print(f'Posts fetched in {time.time() - start} seconds')
+    async def getPosts() -> PostList:
+        async with httpx.AsyncClient() as client:
+            start = time.time()
+
+            posts_resp = await client.get('https://jsonplaceholder.typicode.com/posts')
+
+            photos_resp = await client.get('https://jsonplaceholder.typicode.com/photos')
+
+            posts = posts_resp.json()
+
+            photos = photos_resp.json()
+
+            print(f'Posts fetched in {time.time() - start} seconds')
+
         bundle = PostUtils.PostList([{**posts[index], 'url': photos[index]['url']} for index in range(len(posts))])
+
         return bundle
     
 class CommentUtils:
-    def getComments(postId: int) -> list[dict[str, any]]:
-        start = time.time()
-        comments = requests.get('https://jsonplaceholder.typicode.com/comments').json()
-        print(f'Comments fetched in {time.time() - start} seconds')
-        i, maxI = 0, len(comments)
-        validComments = []
-        while i < maxI:
-            if comments[i]['postId'] > postId:
-                break
-            elif comments[i]['postId'] == postId:
-                validComments.append(comments[i])
-            i += 1
+    @staticmethod
+    async def getComments(postId: int) -> list[dict[str, any]]:
+        async with httpx.AsyncClient() as client:
+            start = time.time()
+
+            comments_resp = await client.get('https://jsonplaceholder.typicode.com/comments')
+
+            comments = comments_resp.json()
+
+            print(f'Comments fetched in {time.time() - start} seconds')
+
+        validComments = [comment for comment in comments if comment['postId'] == postId]
+
         return validComments
 
 class ErrorUtils:
@@ -44,11 +57,13 @@ class ErrorUtils:
     def translateErrorToString(errorCode: int) -> str:
         if errorCode == 0:
             return ''
-        errorMsg = 'Incorrect values in: '
+        errorMsg = 'Error: '
         if errorCode & 4:
-            errorMsg += 'Amount of posts, '
+            errorMsg += 'Incorrect amount of posts, '
         if errorCode & 2:
-            errorMsg += 'Lower post length limit, '
+            errorMsg += 'Incorrect lower post length limit, '
         if errorCode & 1:
-            errorMsg += 'Upper limit'
+            errorMsg += 'Incorrect upper limit, '
+        if errorCode & 8:
+            errorMsg += 'No posts found that match the criteria'
         return errorMsg

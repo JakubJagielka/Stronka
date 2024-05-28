@@ -46,6 +46,8 @@ def submit():
 
         global posts
         posts = PostUtils.getPosts().filterPosts(amountOfPosts, [lowerLimit, upperLimit])
+        if len(posts) == 0:
+            errorCode |= 8
         errorCode = ErrorUtils.translateErrorToString(errorCode)
         return render_template('index.html', posts=posts, errorCode=errorCode)
 
