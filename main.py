@@ -1,15 +1,15 @@
 from flask import Flask, render_template, request
 from optymalizacja_projekt import PostUtils, CommentUtils, ErrorUtils
 import cProfile
+import asyncio
 
 app = Flask(__name__)
 
 # Początkowe 4 posty na stronie
-posts = PostUtils.getPosts().filterPosts(100, [0, 2147483646])
-
+posts = asyncio.run(PostUtils.getPosts()).filterPosts(100, [0, 2147483646])
 
 @app.route('/submit', methods=['POST'])
-def submit():
+async def submit():
     errorCode = 0
     if request.method == 'POST':
         # tu prubuje wziąść wartosc z wejscia liczby postow
@@ -45,7 +45,9 @@ def submit():
             upperLimit = lowerLimit + 1
 
         global posts
-        posts = PostUtils.getPosts().filterPosts(amountOfPosts, [lowerLimit, upperLimit])
+        posts = await PostUtils.getPosts()
+        posts = posts.filterPosts(amountOfPosts, [lowerLimit, upperLimit])
+
         if len(posts) == 0:
             errorCode |= 8
         errorCode = ErrorUtils.translateErrorToString(errorCode)
@@ -53,12 +55,12 @@ def submit():
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+async def index():
     return render_template('index.html', posts=posts)
 
 
 @app.route('/post.html')
-def post():
+async def post():
     # Zdobycie id z adresu url aby wiedzieć, który post wyświetlić
     try:
         post_id = request.args.get('id')
@@ -66,12 +68,13 @@ def post():
     except:
         return "Something went wrong", 404
     post = next((p for p in posts if str(p['id']) == post_id), None)
-    comments = CommentUtils.getComments(int(post_id))
+    comments = await CommentUtils.getComments(int(post_id))
     if post:
-        return render_template('post.html', post=post, comments=comments)
+        return  render_template('post.html', post=post, comments=comments)
     else:
         return "Post not found", 404
 
 
 if __name__ == '__main__':
-    cProfile.run('app.run(debug=True)', sort='cumulative')
+
+    app.run(debug=True)
